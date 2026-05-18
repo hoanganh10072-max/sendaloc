@@ -63,5 +63,13 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeModal();
 });
 
+// ============ MINIGAME BUTTON ============
+const minigameBtn = document.getElementById('minigameBtn');
+if (minigameBtn) {
+  minigameBtn.addEventListener('click', () => {
+    showToast('🎮 Minigame sắp ra mắt — đón chờ nhé!');
+  });
+}
+
 // ============ INIT ============
 showToast('Chào mừng đến Trà Sen Đa Lộc 🌺');

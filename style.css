@@ -154,6 +154,21 @@ button { font-family: inherit; cursor: pointer; }
 }
 .btn-secondary:hover { background: #f4f8eb; border-color: #adc58d; }
 
+.btn-game {
+  background: linear-gradient(135deg, #ffd54a 0%, #ffa726 100%);
+  color: #4a3300;
+  border: none;
+  box-shadow: 0 10px 24px rgba(255, 167, 38, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+.btn-game:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 14px 30px rgba(255, 167, 38, 0.5);
+  transform: translateY(-1px);
+}
+.btn-game:active { transform: translateY(1px); }
+
 @keyframes floatFlower {
   0%, 100% { transform: translateY(0) rotate(0deg); }
   50% { transform: translateY(-8px) rotate(8deg); }
