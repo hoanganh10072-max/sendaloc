@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEN ĐA LỘC - Trà Sen Đa Lộc</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;background:#f8f7f2;font-family:Arial,Helvetica,sans-serif;color:#3e5d25}
+    .page{width:768px;min-height:1661px;margin:0 auto;background:#fff;position:relative;overflow:hidden}
+    .back-btn{position:absolute;left:24px;top:24px;width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.85);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;color:#3f6427;font-size:30px;font-weight:300;text-decoration:none;cursor:pointer;line-height:1;box-shadow:0 4px 14px rgba(0,0,0,0.10);z-index:10;transition:background .2s ease, transform .15s ease}
+    .back-btn:hover{background:#fff;transform:translateX(-2px)}
+    .back-btn:active{transform:translateX(-2px) scale(0.95)}
+    /* ===== HERO (đồng bộ với index.html) ===== */
+    .hero{position:relative;padding:48px 36px 60px;font-family:'Be Vietnam Pro',sans-serif;background:linear-gradient(to right,rgba(255,253,246,0.95) 0%,rgba(255,253,246,0.85) 28%,rgba(255,253,246,0.55) 50%,rgba(255,253,246,0.15) 75%,rgba(255,253,246,0) 100%),url('images/hero-banner.png') 100% center / cover no-repeat,linear-gradient(to bottom,#ffffff,#f5f7ec);overflow:hidden}
+    .logo-hero{text-align:center;font-family:'Playfair Display',serif;color:#466128;font-size:26px;letter-spacing:2px;font-weight:700;margin-bottom:42px;position:relative}
+    .logo-hero::after{content:'';display:block;width:48px;height:2px;background:#adc58d;margin:8px auto 0}
+    .title{font-family:'Playfair Display',serif;font-size:72px;line-height:1.04;margin:0 0 18px;color:#35511f;letter-spacing:-1px;font-weight:700}
+    .hero-line{width:170px;height:2px;background:#67844d;margin:0 0 24px}
+    .desc-hero{line-height:1.7;color:#53614b;width:55%;font-size:18px;margin:0 0 28px}
+    .hero-benefit{display:flex;gap:16px;margin:18px 0;align-items:flex-start;width:60%}
+    .hero-icon{width:48px;height:48px;border:2px solid #527732;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;color:#527732;background:rgba(255,253,246,0.7);flex-shrink:0}
+    .hero-icon-img{padding:0;overflow:hidden;background:#fff}
+    .hero-icon-img img{width:100%;height:100%;object-fit:contain;padding:6px;display:block}
+    .hero-benefit b{font-size:17px;color:#4c7529;display:block;margin-bottom:4px}
+    .hero-benefit p{margin:0;font-size:15px;line-height:1.5;color:#53614b}
+    .hero-price-badge{position:absolute;right:32px;bottom:24px;width:170px;height:auto;z-index:4;animation:pricePulse 3s ease-in-out infinite;filter:drop-shadow(0 10px 20px rgba(73,114,34,0.28))}
+    @keyframes pricePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+    .form{width:705px;margin:0 auto 35px;background:#fff;border-radius:30px;padding:30px;box-shadow:0 0 25px rgba(0,0,0,.10)}
+    .section-title{display:flex;align-items:center;gap:12px;margin:0 0 22px;font-size:23px;font-weight:bold}
+    .section-title:after{content:'';height:1px;background:#e2e2df;flex:1}
+    .options{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:30px}
+    .card{border:1px solid #e4e2de;border-radius:15px;padding:20px 18px;min-height:98px;display:flex;gap:16px;align-items:center;position:relative;cursor:pointer;transition:border-color .2s ease}
+    .card.active{border:2px solid #5a7e31}
+    .check{position:absolute;right:12px;top:14px;background:#63862e;color:white;width:22px;height:22px;border-radius:50%;font-size:16px;text-align:center;line-height:22px}
+    .card .bigicon{font-size:39px;color:#557831}
+    .card .bigicon-img{width:54px;height:54px;display:flex;align-items:center;justify-content:center}
+    .card .bigicon-img img{width:100%;height:100%;object-fit:contain}
+    .card b{font-size:18px;color:#3f512f}
+    .card p{font-size:15px;color:#666;margin:8px 0 0;line-height:1.35}
+    .qtyrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+    .stepper{display:flex;width:210px;height:52px;border-radius:22px;overflow:hidden;background:#f7f7f5;border:1px solid #e9e9e6}
+    .stepper div{flex:1;display:flex;align-items:center;justify-content:center;font-size:27px;font-weight:bold;user-select:none}
+    .stepper div:nth-child(odd){cursor:pointer;color:#4f781d;transition:background .2s ease}
+    .stepper div:nth-child(odd):hover{background:#eef0e6}
+    .stepper div:nth-child(2){background:#fff}
+    .price{font-size:26px;font-weight:bold;color:#426529}
+    .total{height:70px;border:1px solid #e5e3de;border-radius:11px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;margin-bottom:26px;font-size:24px;font-weight:bold}
+    .total-label{display:flex;align-items:center;gap:12px}
+    .total-icon{width:34px;height:34px;object-fit:contain;display:block}
+    .ship{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:22px}
+    .label{font-size:16px;color:#4b4b4b;margin:10px 0 12px}
+    .input{height:54px;border:1px solid #dedbd6;border-radius:11px;padding:0 18px;color:#3e5d25;font-size:16px;display:flex;align-items:center;margin-bottom:22px;background:#fff;width:100%;font-family:inherit;outline:none}
+    .input::placeholder{color:#aaa}
+    .input:focus{border-color:#5a7e31}
+    .input.invalid{border-color:#e23b3b;background:#fff5f5;animation:shake .4s ease}
+    @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+    .alert-toast{position:fixed;left:50%;top:30px;transform:translateX(-50%) translateY(-30px);background:#fff;color:#3f512f;border:1px solid #e6b9b9;border-left:5px solid #e23b3b;border-radius:12px;padding:14px 22px;font-size:15px;font-weight:600;box-shadow:0 14px 32px rgba(0,0,0,.18);opacity:0;pointer-events:none;transition:opacity .25s ease, transform .25s ease;z-index:9999;max-width:90%;text-align:center}
+    .alert-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .input-row{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+    .order{height:65px;border-radius:33px;background:#4f781d;color:#fff;display:flex;align-items:center;justify-content:center;gap:22px;font-size:26px;font-weight:bold;margin-top:6px;cursor:pointer;border:0;width:100%;font-family:inherit;transition:transform .15s ease, box-shadow .15s ease}
+    .order:hover{filter:brightness(1.08);box-shadow:0 12px 24px rgba(79,120,29,.35);transform:translateY(-1px)}
+    .order:active{transform:translateY(0)}
+    .safe{text-align:center;color:#7f7f7f;font-size:16px;margin-top:22px}
+
+    @media(max-width:800px){
+      .page{width:100%;min-height:auto}
+      .hero{padding:32px 22px 50px}
+      .logo-hero{font-size:22px;margin-bottom:32px}
+      .title{font-size:48px}
+      .hero-line{width:130px;margin-bottom:18px}
+      .desc-hero{font-size:14px;width:80%;margin-bottom:22px}
+      .hero-benefit{width:100%;gap:12px;margin:14px 0}
+      .hero-icon{width:42px;height:42px;font-size:20px}
+      .hero-benefit b{font-size:15px}
+      .hero-benefit p{font-size:13px}
+      .hero-price-badge{width:110px;right:18px;bottom:14px}
+      .form{width:calc(100% - 36px);padding:22px;border-radius:24px}
+      .input-row{grid-template-columns:1fr;gap:14px}
+      .options,.ship{gap:12px}
+      .options .card,.ship .card{padding:14px 10px;gap:10px;min-height:80px;flex-direction:column;text-align:center;align-items:center}
+      .options .card .bigicon,.ship .card .bigicon{font-size:30px}
+      .options .card b,.ship .card b{font-size:14px}
+      .options .card p,.ship .card p{font-size:12px;margin-top:4px}
+      .section-title{font-size:18px}
+      .total{font-size:18px}
+      .order{height:54px;font-size:20px}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <a class="back-btn" href="index.html" aria-label="Quay lại trang trước" onclick="if(document.referrer){history.back();return false;}">←</a>
+
+    <section class="hero">
+      <div class="logo-hero">SEN ĐA LỘC</div>
+
+      <h1 class="title">Trà Sen<br>Đa Lộc</h1>
+      <div class="hero-line"></div>
+
+      <p class="desc-hero">Hương sen thanh mát hòa quyện cùng trà xanh đậm vị, mang lại cảm giác thư thái, nhẹ nhàng.</p>
+
+      <div class="hero-benefit"><div class="hero-icon hero-icon-img"><img src="images/dh-organic.png" alt="Nguyên liệu hữu cơ"></div><div><b>Nguyên liệu hữu cơ</b><p>100% nguyên liệu sạch, chọn lọc kĩ lưỡng</p></div></div>
+      <div class="hero-benefit"><div class="hero-icon hero-icon-img"><img src="images/dh-no-preservative.png" alt="Không chất bảo quản"></div><div><b>Không chất bảo quản</b><p>An toàn cho sức khỏe, không hương liệu</p></div></div>
+      <div class="hero-benefit"><div class="hero-icon hero-icon-img"><img src="images/dh-cooling.png" alt="Giải nhiệt tự nhiên"></div><div><b>Giải nhiệt tự nhiên</b><p>Thanh mát, tốt cho cơ thể mỗi ngày</p></div></div>
+
+      <img class="hero-price-badge" src="images/price-badge-2.png" alt="Chỉ từ 20k" />
+    </section>
+
+    <section class="form">
+      <div class="section-title">Tùy chọn 🍃</div>
+      <div class="options" data-group="card">
+        <div class="card active">
+          <div class="bigicon bigicon-img"><img src="images/dh-original.png" alt="Nguyên bản"></div>
+          <div><b>Nguyên bản</b><p>Vị trà sen thanh mát<br>tự nhiên</p></div>
+          <span class="check">✓</span>
+        </div>
+        <div class="card">
+          <div class="bigicon bigicon-img"><img src="images/dh-less-sugar.png" alt="Ít ngọt"></div>
+          <div><b>Ít ngọt</b><p>Giảm 30% lượng đường,<br>thanh nhẹ hơn</p></div>
+        </div>
+      </div>
+
+      <div class="section-title">Số lượng 🍃</div>
+      <div class="qtyrow">
+        <div class="stepper">
+          <div data-step="-1">−</div>
+          <div id="qty">1</div>
+          <div data-step="1">＋</div>
+        </div>
+        <div class="price" id="unitPrice">20.000đ</div>
+      </div>
+
+      <div class="total"><span class="total-label"><img class="total-icon" src="images/dh-total-tag.png" alt="Tổng tiền">Tổng tiền</span><span id="total">20.000đ</span></div>
+
+      <div class="section-title">Hình thức nhận hàng 🍃</div>
+      <div class="ship" data-group="card">
+        <div class="card">
+          <div class="bigicon bigicon-img"><img src="images/dh-ship-local.png" alt="Giao hàng tận nơi"></div>
+          <div><b>Giao hàng tận nơi</b><p>Freeship đơn từ 50k</p></div>
+        </div>
+        <div class="card active">
+          <div class="bigicon bigicon-img"><img src="images/dh-ship-truck.png" alt="Ship ngoại thành"></div>
+          <div><b>Ship ngoại thành</b><p>Phí ship tính theo khu vực</p></div>
+          <span class="check">✓</span>
+        </div>
+      </div>
+
+      <div class="label">Địa chỉ giao hàng</div>
+      <input class="input" id="addressInput" placeholder="Nhập địa chỉ nhận hàng">
+      <div class="input-row">
+        <input class="input" id="phoneInput" placeholder="☏  Số điện thoại">
+        <input class="input" id="noteInput" placeholder="✐  Ghi chú (nếu có)">
+      </div>
+
+      <button class="order" id="submitOrder">♧ &nbsp; ĐẶT HÀNG NGAY</button>
+      <div class="safe">♢ &nbsp; Thông tin của bạn được bảo mật tuyệt đối</div>
+    </section>
+  </div>
+
+  <div class="alert-toast" id="alertToast" role="alert"></div>
+
+  <script>
+    const UNIT = 20000;
+    const qtyEl = document.getElementById('qty');
+    const totalEl = document.getElementById('total');
+
+    document.querySelectorAll('.stepper [data-step]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        let q = parseInt(qtyEl.textContent, 10) || 1;
+        q += parseInt(btn.dataset.step, 10);
+        if (q < 1) q = 1;
+        if (q > 99) q = 99;
+        qtyEl.textContent = q;
+        totalEl.textContent = (UNIT * q).toLocaleString('vi-VN') + 'đ';
+      });
+    });
+
+    // Single-select within each group (options & shipping)
+    document.querySelectorAll('[data-group]').forEach(group => {
+      const items = group.querySelectorAll('.card');
+      items.forEach(item => {
+        item.addEventListener('click', () => {
+          items.forEach(o => {
+            o.classList.remove('active');
+            const c = o.querySelector('.check'); if (c) c.remove();
+          });
+          item.classList.add('active');
+          if (!item.querySelector('.check')) {
+            const c = document.createElement('span');
+            c.className = 'check'; c.textContent = '✓';
+            item.appendChild(c);
+          }
+        });
+      });
+    });
+
+    const addressInput = document.getElementById('addressInput');
+    const phoneInput = document.getElementById('phoneInput');
+
+    const showAlert = (msg) => {
+      const t = document.getElementById('alertToast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(showAlert._timer);
+      showAlert._timer = setTimeout(() => t.classList.remove('show'), 2600);
+    };
+
+    const markInvalid = (el) => {
+      el.classList.add('invalid');
+      el.addEventListener('input', () => el.classList.remove('invalid'), { once: true });
+    };
+
+    document.getElementById('submitOrder').addEventListener('click', () => {
+      const addr = addressInput.value.trim();
+      const phone = phoneInput.value.trim();
+      if (!addr || !phone) {
+        if (!addr) markInvalid(addressInput);
+        if (!phone) markInvalid(phoneInput);
+        showAlert('⚠ Quý khách vui lòng điền đầy đủ thông tin trước khi thanh toán');
+        (!addr ? addressInput : phoneInput).focus();
+        return;
+      }
+      const qty = parseInt(qtyEl.textContent, 10) || 1;
+      const optionEl = document.querySelector('.options .card.active b');
+      const shipEl = document.querySelector('.ship .card.active b');
+      const option = optionEl ? optionEl.textContent.trim() : 'Nguyên bản';
+      const ship = shipEl ? shipEl.textContent.trim() : 'Ship ngoại thành';
+      const params = new URLSearchParams({ qty, option, ship });
+      location.href = 'thanh-toan.html?' + params.toString();
+    });
+  </script>
+</body>
+</html>

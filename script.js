@@ -67,7 +67,7 @@ document.addEventListener('keydown', (e) => {
 const minigameBtn = document.getElementById('minigameBtn');
 if (minigameBtn) {
   minigameBtn.addEventListener('click', () => {
-    showToast('🎮 Minigame sắp ra mắt — đón chờ nhé!');
+    location.href = 'mini-game.html';
   });
 }
 

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sen Đa Lộc – Thanh toán đơn hàng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#4f781d; --green-dark:#3f6017; --green-soft:#526f21;
+    --cream:#f7f3e8; --line:#eef0e8; --muted:#7a7d73;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:'Be Vietnam Pro', Arial, Helvetica, sans-serif;
+    background:#fff; color:#263015; display:flex; justify-content:center;
+    min-height:100vh;
+  }
+  .page{
+    width:768px; min-height:100vh; position:relative; overflow:hidden; background:#fff;
+    padding:24px 32px 40px;
+  }
+
+  /* back button */
+  .back-btn{
+    position:absolute; top:18px; left:18px; z-index:10;
+    width:44px; height:44px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:#fff; color:var(--green); font-size:26px; font-weight:300;
+    text-decoration:none; border:1px solid #e6e6e6;
+    box-shadow:0 6px 14px rgba(0,0,0,.08);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .back-btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,0,0,.12)}
+
+  /* brand top */
+  .brand-bar{text-align:center; padding:24px 0 14px; position:relative;}
+  .brand-leaf{color:var(--green); font-size:26px; transform:rotate(-15deg); display:inline-block; margin-bottom:6px}
+  .brand-name{font-family:'Playfair Display', Georgia, serif; color:var(--green); font-size:30px; font-weight:700; letter-spacing:3px}
+  .brand-name::after{content:'';display:block;width:48px;height:2px;background:#adc58d;margin:8px auto 0}
+  .brand-tag{font-family:'Be Vietnam Pro', sans-serif; font-size:14px; color:#7a8267; margin-top:10px; font-weight:400; letter-spacing:.3px}
+
+  /* heading */
+  h1{
+    font-family:'Playfair Display', Georgia, serif;
+    font-size:36px; margin:18px 0 6px; font-weight:700; color:#304018;
+    text-align:center;
+  }
+  h1 .leaf{display:inline-block; color:var(--green); font-size:22px; transform:rotate(-15deg); margin-left:8px}
+  .sub{font-size:15px; color:#7a7d73; text-align:center; margin-bottom:24px}
+
+  /* card */
+  .card{
+    background:#fff; border-radius:18px;
+    box-shadow:0 6px 24px rgba(32,54,9,.08);
+    border:1px solid rgba(232,235,225,.7);
+    margin-bottom:20px;
+  }
+
+  /* order summary */
+  .order{display:flex; overflow:hidden; min-height:200px}
+  .prod-img{width:200px; height:auto; object-fit:cover; flex-shrink:0; background:#f4f4f4}
+  .prod-info{padding:22px 24px; flex:1}
+  .prod-title{font-family:'Playfair Display', Georgia, serif; font-weight:700; font-size:22px; margin-bottom:6px; color:#354014}
+  .prod-desc{color:#6c7065; font-size:14px; margin-bottom:18px}
+  .row{display:flex; justify-content:space-between; align-items:center; margin:10px 0; color:#5a5f51; font-size:15px}
+  .row span:last-child{font-weight:600; color:#4c503e}
+  .line{border-top:1px dashed var(--line); margin:14px 0 10px}
+  .total{font-weight:700; color:var(--green); font-size:17px}
+  .total span:last-child{font-size:22px; color:var(--green)}
+
+  /* timer */
+  .timer{
+    height:78px; border-radius:14px; background:linear-gradient(135deg,#f7f9f2,#eef3df);
+    display:flex; align-items:center; padding:0 24px; margin-bottom:20px; gap:16px;
+    border:1px solid #e3ead0;
+  }
+  .clock{
+    width:44px; height:44px; border:2px solid var(--green); border-radius:50%;
+    position:relative; flex-shrink:0; background:#fff;
+  }
+  .clock:before{content:""; position:absolute; width:2px; height:14px; background:var(--green); left:50%; top:8px; transform:translateX(-50%); border-radius:2px}
+  .clock:after{content:""; position:absolute; width:11px; height:2px; background:var(--green); left:50%; top:20px; transform-origin:left center; transform:rotate(40deg); border-radius:2px}
+  .timer-text{flex:1}
+  .timer-title{font-weight:700; font-size:15px; color:#2c331c}
+  .timer-note{font-size:12px; color:#62675b; margin-top:3px}
+  .time{font-size:32px; color:#e31320; font-weight:800; letter-spacing:1px; text-align:center; min-width:90px; line-height:1}
+  .time small{display:block; color:#6e716b; font-size:11px; font-weight:400; letter-spacing:0; margin-top:4px}
+
+  /* payment */
+  .payment{padding:24px 24px 28px; text-align:center}
+  .pay-title{font-family:'Playfair Display', Georgia, serif; font-size:22px; color:var(--green); font-weight:700; margin-bottom:14px; text-transform:uppercase; letter-spacing:1px}
+  .pay-title:before,.pay-title:after{content:"❧"; color:var(--green); font-size:16px; margin:0 12px}
+  .pay-brand{font-size:18px; color:#e31b23; font-weight:800; letter-spacing:1px; display:flex; justify-content:center; align-items:center; gap:40px; margin-bottom:14px}
+  .pay-brand .napas{font-size:14px; color:#2b50a4; font-style:italic; font-weight:600}
+
+  .qrbox{
+    display:inline-block; border:2px solid #9bae76; border-radius:8px;
+    padding:8px; background:#fff; margin:6px 0 10px;
+    box-shadow:0 4px 12px rgba(79,120,29,.15);
+  }
+  .qrbox svg{display:block; width:220px; height:220px}
+  .caption{font-size:13px; color:var(--muted); margin-top:8px}
+  .amount{font-size:34px; font-weight:800; color:var(--green); line-height:1.1; margin:6px 0 14px}
+
+  .transfer{
+    max-width:360px; margin:8px auto 16px; border-radius:11px; background:#fafaf8;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 18px; border:1px dashed #d6dcc8; gap:14px;
+  }
+  .transfer .left{font-size:11px; line-height:1.35; color:#62675b; text-align:left}
+  .transfer strong{font-size:15px; letter-spacing:.4px; color:#2e351d; display:block; margin-top:2px}
+  .copy{
+    font-size:13px; color:#fff; background:var(--green); padding:7px 14px; border-radius:8px;
+    display:flex; align-items:center; gap:5px; cursor:pointer; border:0;
+    font-family:inherit; font-weight:600; transition:background .18s ease;
+  }
+  .copy:hover{background:var(--green-dark)}
+  .copy.copied{background:#2e8b3a}
+
+  .shield{font-size:13px; color:#7e9360; margin-top:8px}
+
+  /* guide */
+  .guide{padding:22px 24px 26px}
+  .guide-title{font-family:'Playfair Display', Georgia, serif; color:var(--green); font-weight:700; font-size:20px; margin-bottom:18px; text-align:center}
+  .steps{display:flex; align-items:flex-start; justify-content:space-between; gap:8px}
+  .step{flex:1; text-align:center; position:relative; padding:0 8px}
+  .num{
+    position:absolute; top:-6px; left:50%; transform:translateX(22px);
+    width:22px; height:22px; border-radius:50%; background:var(--green);
+    color:#fff; font-size:12px; line-height:22px; font-weight:700;
+  }
+  .iconbox{
+    margin:0 auto 10px; width:54px; height:54px; border:1.5px solid #dfe7d1;
+    border-radius:12px; background:#fbfcf8;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--green); font-size:26px;
+  }
+  .iconbox-img{padding:6px}
+  .iconbox-img img{width:100%;height:100%;object-fit:contain;display:block}
+  .step p{margin:0; font-size:13px; color:#2e351d; line-height:1.4; font-weight:600}
+  .step small{font-size:11px; color:#7b7e73; display:block; margin-top:3px; font-weight:400}
+  .arrow{color:var(--green); font-size:22px; align-self:center; margin-top:18px; flex:0 0 auto}
+
+  /* support */
+  .support{
+    margin-top:16px; border-radius:14px; background:#fff;
+    box-shadow:0 4px 16px rgba(35,50,9,.08);
+    display:flex; align-items:center; gap:14px; padding:14px 22px;
+    font-size:13px; color:#596051; border:1px solid #ecefdf;
+  }
+  .headset{
+    width:36px; height:36px; border:1.5px solid #bdd0a0; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; color:var(--green); font-size:18px; flex-shrink:0;
+  }
+  .headset-img{padding:5px;background:#fff}
+  .headset-img img{width:100%;height:100%;object-fit:contain;display:block}
+  .support b{font-size:14px; color:var(--green); display:block; margin-bottom:2px}
+
+  /* decorations */
+  .lotus, .leaf-deco, .petal{position:absolute; pointer-events:none; opacity:.85}
+  .lotus{left:-30px; bottom:120px; width:110px; height:110px; transform:rotate(-18deg)}
+  .lotus:before{
+    content:""; position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 60% 48%, #f7cfec 0 12%, transparent 13%),
+      radial-gradient(ellipse at 44% 45%, #df168b 0 13%, transparent 14%),
+      radial-gradient(ellipse at 65% 45%, #ee59ac 0 15%, transparent 16%),
+      radial-gradient(ellipse at 47% 64%, #f55cb7 0 13%, transparent 14%);
+    filter:blur(.5px);
+  }
+  .petal{width:32px; height:14px; background:linear-gradient(90deg,#f06aad,#e11588); border-radius:100% 0 100% 0}
+  .p1{right:30px; top:220px; transform:rotate(-22deg)}
+  .p2{left:18px; bottom:60px; transform:rotate(45deg)}
+  .leaf-deco{right:-20px; bottom:40px; width:90px; height:42px; background:#7fb429; border-radius:100% 0 100% 0; transform:rotate(-15deg); filter:blur(.4px)}
+
+  /* toast */
+  .toast{
+    position:fixed; left:50%; bottom:30px; transform:translateX(-50%) translateY(20px);
+    background:#2e351d; color:#fff; padding:12px 22px; border-radius:10px; font-size:14px;
+    opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease;
+    z-index:9999; box-shadow:0 10px 24px rgba(0,0,0,.25);
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+
+  @media(max-width:800px){
+    .page{width:100%; padding:18px 16px 32px}
+    h1{font-size:28px}
+    .order{flex-direction:column}
+    .prod-img{width:100%; height:200px}
+    .prod-info{padding:18px}
+    .pay-brand{gap:20px}
+    .qrbox svg{width:180px; height:180px}
+    .amount{font-size:28px}
+    .steps{flex-wrap:wrap; gap:10px}
+    .arrow{display:none}
+    .step{flex:0 0 30%}
+  }
+</style>
+</head>
+<body>
+  <main class="page">
+    <a class="back-btn" href="dat-hang.html" aria-label="Quay lại" onclick="if(document.referrer){history.back();return false;}">‹</a>
+
+    <div class="brand-bar">
+      <div class="brand-leaf">⌁</div>
+      <div class="brand-name">SEN ĐA LỘC</div>
+      <div class="brand-tag">Thanh mát đậm vị – Tinh túy từ thiên nhiên</div>
+    </div>
+
+    <h1>Thanh toán đơn hàng <span class="leaf">➤</span></h1>
+    <div class="sub">Vui lòng thanh toán trong thời gian quy định</div>
+
+    <!-- order summary -->
+    <section class="card order">
+      <img class="prod-img" src="images/product-tea.jpg" alt="Trà Sen Đa Lộc">
+      <div class="prod-info">
+        <div class="prod-title">Trà Sen Đa Lộc</div>
+        <div class="prod-desc">Thanh mát đậm vị – Tinh túy từ thiên nhiên</div>
+        <div class="row"><span>Số lượng</span><span id="sumQty">x1</span></div>
+        <div class="row"><span>Tùy chọn</span><span id="sumOption">Nguyên bản</span></div>
+        <div class="row"><span>Tạm tính</span><span id="sumSubtotal">20.000đ</span></div>
+        <div class="row"><span>Phí vận chuyển</span><span id="sumShip">15.000đ</span></div>
+        <div class="line"></div>
+        <div class="row total"><span>Tổng thanh toán</span><span id="sumTotal">35.000đ</span></div>
+      </div>
+    </section>
+
+    <!-- timer -->
+    <section class="timer">
+      <div class="clock"></div>
+      <div class="timer-text">
+        <div class="timer-title">Vui lòng thanh toán trước khi hết thời gian</div>
+        <div class="timer-note">Đơn hàng sẽ tự động hủy nếu hết thời gian.</div>
+      </div>
+      <div class="time"><span id="countdown">09:45</span><small>Thời gian còn lại</small></div>
+    </section>
+
+    <!-- payment -->
+    <section class="card payment">
+      <div class="pay-title">Quét mã để thanh toán</div>
+      <div class="pay-brand"><span>VIETQR</span><span class="napas">napas 247</span></div>
+      <div class="qrbox">
+        <svg viewBox="0 0 33 33" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+          <rect width="33" height="33" fill="#fff"/>
+          <g fill="#1a1a1a">
+            <!-- top-left finder -->
+            <rect x="0" y="0" width="7" height="7"/><rect x="1" y="1" width="5" height="5" fill="#fff"/><rect x="2" y="2" width="3" height="3"/>
+            <!-- top-right finder -->
+            <rect x="26" y="0" width="7" height="7"/><rect x="27" y="1" width="5" height="5" fill="#fff"/><rect x="28" y="2" width="3" height="3"/>
+            <!-- bottom-left finder -->
+            <rect x="0" y="26" width="7" height="7"/><rect x="1" y="27" width="5" height="5" fill="#fff"/><rect x="2" y="28" width="3" height="3"/>
+            <!-- timing patterns -->
+            <rect x="8" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="12" y="6" width="1" height="1"/><rect x="14" y="6" width="1" height="1"/><rect x="16" y="6" width="1" height="1"/><rect x="18" y="6" width="1" height="1"/><rect x="20" y="6" width="1" height="1"/><rect x="22" y="6" width="1" height="1"/><rect x="24" y="6" width="1" height="1"/>
+            <rect x="6" y="8" width="1" height="1"/><rect x="6" y="10" width="1" height="1"/><rect x="6" y="12" width="1" height="1"/><rect x="6" y="14" width="1" height="1"/><rect x="6" y="16" width="1" height="1"/><rect x="6" y="18" width="1" height="1"/><rect x="6" y="20" width="1" height="1"/><rect x="6" y="22" width="1" height="1"/><rect x="6" y="24" width="1" height="1"/>
+            <!-- alignment pattern bottom-right -->
+            <rect x="22" y="22" width="5" height="5"/><rect x="23" y="23" width="3" height="3" fill="#fff"/><rect x="24" y="24" width="1" height="1"/>
+            <!-- data pattern (decorative pseudo-random) -->
+            <rect x="9" y="8" width="1" height="1"/><rect x="11" y="8" width="1" height="1"/><rect x="13" y="8" width="2" height="1"/><rect x="17" y="8" width="1" height="2"/><rect x="20" y="8" width="2" height="1"/><rect x="23" y="8" width="1" height="2"/>
+            <rect x="8" y="9" width="1" height="2"/><rect x="12" y="9" width="2" height="2"/><rect x="15" y="9" width="1" height="1"/><rect x="18" y="9" width="1" height="2"/><rect x="21" y="9" width="1" height="1"/><rect x="24" y="9" width="2" height="1"/>
+            <rect x="10" y="10" width="1" height="1"/><rect x="16" y="10" width="1" height="2"/><rect x="19" y="10" width="2" height="1"/><rect x="25" y="10" width="1" height="2"/>
+            <rect x="9" y="11" width="2" height="1"/><rect x="14" y="11" width="2" height="2"/><rect x="20" y="11" width="1" height="2"/><rect x="22" y="11" width="2" height="1"/>
+            <rect x="8" y="12" width="1" height="2"/><rect x="11" y="12" width="2" height="1"/><rect x="17" y="12" width="2" height="2"/><rect x="22" y="12" width="1" height="2"/><rect x="24" y="12" width="1" height="2"/>
+            <rect x="10" y="13" width="1" height="1"/><rect x="13" y="13" width="1" height="2"/><rect x="16" y="13" width="1" height="1"/><rect x="19" y="13" width="1" height="2"/><rect x="21" y="13" width="2" height="1"/>
+            <rect x="9" y="14" width="2" height="1"/><rect x="12" y="14" width="1" height="2"/><rect x="15" y="14" width="1" height="2"/><rect x="20" y="14" width="2" height="2"/><rect x="23" y="14" width="2" height="1"/>
+            <rect x="8" y="15" width="1" height="2"/><rect x="11" y="15" width="1" height="1"/><rect x="14" y="15" width="2" height="1"/><rect x="17" y="15" width="2" height="2"/><rect x="22" y="15" width="1" height="2"/>
+            <rect x="9" y="16" width="2" height="2"/><rect x="13" y="16" width="2" height="1"/><rect x="16" y="16" width="1" height="2"/><rect x="19" y="16" width="2" height="1"/><rect x="24" y="16" width="2" height="2"/>
+            <rect x="12" y="17" width="2" height="1"/><rect x="15" y="17" width="1" height="2"/><rect x="18" y="17" width="1" height="2"/><rect x="22" y="17" width="2" height="2"/>
+            <rect x="8" y="18" width="2" height="1"/><rect x="11" y="18" width="2" height="2"/><rect x="14" y="18" width="2" height="2"/><rect x="17" y="18" width="2" height="1"/><rect x="20" y="18" width="1" height="2"/>
+            <rect x="10" y="19" width="1" height="2"/><rect x="13" y="19" width="1" height="1"/><rect x="16" y="19" width="1" height="2"/><rect x="19" y="19" width="2" height="1"/><rect x="22" y="19" width="1" height="1"/><rect x="24" y="19" width="2" height="1"/>
+            <rect x="9" y="20" width="1" height="1"/><rect x="12" y="20" width="2" height="1"/><rect x="15" y="20" width="2" height="2"/><rect x="18" y="20" width="1" height="2"/><rect x="21" y="20" width="2" height="2"/>
+            <rect x="8" y="21" width="1" height="2"/><rect x="11" y="21" width="2" height="2"/><rect x="14" y="21" width="1" height="2"/><rect x="17" y="21" width="2" height="1"/><rect x="20" y="21" width="1" height="2"/>
+            <rect x="10" y="22" width="2" height="1"/><rect x="13" y="22" width="2" height="1"/><rect x="16" y="22" width="2" height="2"/><rect x="19" y="22" width="1" height="2"/>
+            <rect x="9" y="23" width="1" height="2"/><rect x="12" y="23" width="1" height="2"/><rect x="15" y="23" width="2" height="1"/><rect x="18" y="23" width="2" height="2"/><rect x="21" y="23" width="1" height="2"/>
+            <rect x="8" y="24" width="2" height="1"/><rect x="11" y="24" width="2" height="2"/><rect x="14" y="24" width="2" height="2"/><rect x="17" y="24" width="2" height="1"/><rect x="20" y="24" width="2" height="2"/>
+            <rect x="10" y="25" width="1" height="1"/><rect x="13" y="25" width="1" height="1"/><rect x="16" y="25" width="1" height="2"/><rect x="19" y="25" width="2" height="1"/>
+            <rect x="8" y="26" width="2" height="1"/><rect x="11" y="26" width="2" height="2"/><rect x="14" y="26" width="2" height="1"/><rect x="18" y="26" width="1" height="2"/><rect x="20" y="26" width="2" height="1"/>
+            <rect x="9" y="27" width="1" height="2"/><rect x="13" y="27" width="2" height="2"/><rect x="16" y="27" width="2" height="2"/><rect x="19" y="27" width="2" height="2"/>
+            <rect x="8" y="28" width="2" height="1"/><rect x="11" y="28" width="2" height="1"/><rect x="15" y="28" width="1" height="2"/><rect x="18" y="28" width="1" height="2"/><rect x="20" y="28" width="2" height="1"/>
+            <rect x="10" y="29" width="2" height="2"/><rect x="13" y="29" width="2" height="1"/><rect x="17" y="29" width="2" height="2"/><rect x="20" y="29" width="1" height="2"/>
+            <rect x="8" y="30" width="1" height="2"/><rect x="12" y="30" width="2" height="2"/><rect x="15" y="30" width="2" height="1"/><rect x="18" y="30" width="2" height="2"/>
+            <rect x="9" y="31" width="2" height="1"/><rect x="14" y="31" width="2" height="1"/><rect x="16" y="31" width="2" height="2"/><rect x="19" y="31" width="1" height="2"/><rect x="21" y="31" width="2" height="1"/>
+            <!-- center logo overlay backing -->
+            <rect x="14" y="14" width="6" height="6" fill="#fff"/>
+          </g>
+          <!-- center leaf logo -->
+          <text x="50%" y="55%" font-family="Playfair Display, serif" font-size="6" font-weight="700" fill="#4f781d" text-anchor="middle">SĐL</text>
+        </svg>
+      </div>
+      <div class="caption">Số tiền cần thanh toán</div>
+      <div class="amount" id="qrAmount">35.000đ</div>
+      <div class="transfer">
+        <div class="left">
+          Nội dung chuyển khoản
+          <strong id="orderCode">DL240518123</strong>
+        </div>
+        <button class="copy" id="copyBtn" type="button">⧉ Sao chép</button>
+      </div>
+      <div class="shield">♧ Giao dịch được bảo mật tuyệt đối</div>
+    </section>
+
+    <!-- guide -->
+    <section class="card guide">
+      <div class="guide-title">Hướng dẫn thanh toán</div>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><div class="iconbox iconbox-img"><img src="images/tt-app.png" alt="Mở ứng dụng ngân hàng"></div><p>Mở ứng dụng ngân hàng<br><small>hoặc ví điện tử</small></p></div>
+        <div class="arrow">→</div>
+        <div class="step"><div class="num">2</div><div class="iconbox iconbox-img"><img src="images/tt-scan-qr.png" alt="Quét mã QR"></div><p>Quét mã QR<br><small>ở trên</small></p></div>
+        <div class="arrow">→</div>
+        <div class="step"><div class="num">3</div><div class="iconbox iconbox-img"><img src="images/tt-confirm.png" alt="Xác nhận thanh toán"></div><p>Xác nhận thanh toán<br><small>và hoàn tất</small></p></div>
+      </div>
+    </section>
+
+    <section class="support">
+      <div class="headset headset-img"><img src="images/tt-support.png" alt="Hỗ trợ"></div>
+      <div><b>Cần hỗ trợ?</b>Liên hệ <strong>0901 234 567</strong> để được hỗ trợ nhanh chóng</div>
+    </section>
+
+    <div class="lotus"></div>
+    <div class="petal p1"></div>
+    <div class="petal p2"></div>
+    <div class="leaf-deco"></div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ===== Read URL params and populate summary =====
+    const params = new URLSearchParams(location.search);
+    const qty = Math.max(1, parseInt(params.get('qty')||'1',10));
+    const option = params.get('option') || 'Nguyên bản';
+    const ship = params.get('ship') || 'Ship ngoại thành';
+    const UNIT = 20000;
+    const SHIP_FEE = 15000;
+    const subtotal = UNIT * qty;
+    const total = subtotal + SHIP_FEE;
+    const fmt = n => n.toLocaleString('vi-VN') + 'đ';
+
+    document.getElementById('sumQty').textContent = 'x' + qty;
+    document.getElementById('sumOption').textContent = option;
+    document.getElementById('sumSubtotal').textContent = fmt(subtotal);
+    document.getElementById('sumShip').textContent = fmt(SHIP_FEE);
+    document.getElementById('sumTotal').textContent = fmt(total);
+    document.getElementById('qrAmount').textContent = fmt(total);
+
+    // generate order code
+    const now = new Date();
+    const code = 'DL' + String(now.getFullYear()).slice(2) +
+                 String(now.getMonth()+1).padStart(2,'0') +
+                 String(now.getDate()).padStart(2,'0') +
+                 String(Math.floor(Math.random()*900)+100);
+    document.getElementById('orderCode').textContent = code;
+
+    // ===== Toast =====
+    const toast = document.getElementById('toast');
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(()=>toast.classList.remove('show'), 2200);
+    }
+
+    // ===== Copy order code =====
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const text = code;
+      const btn = document.getElementById('copyBtn');
+      const fallback = () => {
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta);
+        ta.select(); document.execCommand('copy'); ta.remove();
+      };
+      const done = () => {
+        btn.classList.add('copied');
+        btn.textContent = '✓ Đã chép';
+        showToast('Đã sao chép mã: ' + text);
+        setTimeout(() => {btn.classList.remove('copied'); btn.textContent = '⧉ Sao chép'}, 1800);
+      };
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(done).catch(()=>{fallback();done();});
+      } else { fallback(); done(); }
+    });
+
+    // ===== Countdown 10:00 =====
+    let seconds = 10 * 60;
+    const cd = document.getElementById('countdown');
+    function tick(){
+      const m = Math.floor(seconds/60), s = seconds%60;
+      cd.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+      if (seconds <= 0) {
+        clearInterval(timer);
+        cd.textContent = '00:00';
+        showToast('Đơn hàng đã hết hạn thanh toán');
+        return;
+      }
+      seconds--;
+    }
+    tick();
+    const timer = setInterval(tick, 1000);
+  </script>
+</body>
+</html>
