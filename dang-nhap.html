@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng nhập | Sen Đa Lộc</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      min-height:100vh;
+      background:linear-gradient(180deg,#f9fbef 0%,#eef4df 52%,#fbfaf5 100%);
+      font-family:'Inter',sans-serif;
+      color:#244b1f;
+    }
+    .phone{
+      width:100%;
+      min-height:100vh;
+      position:relative;
+      overflow:hidden;
+      background:transparent;
+    }
+    .bg{
+      height:380px;
+      position:relative;
+      overflow:hidden;
+      background:#eef6dc url('images/login-banner.png') 28% center/cover no-repeat;
+    }
+    @media (max-width:768px){
+      .bg{background-position:35% center}
+    }
+    @media (max-width:480px){
+      .bg{height:300px;background-size:auto 100%;background-position:38% center}
+    }
+    .bg:after{
+      content:'';
+      position:absolute;
+      left:0;right:0;bottom:0;
+      height:60px;
+      background:linear-gradient(180deg,transparent,rgba(255,255,255,.6));
+      pointer-events:none;
+    }
+    .card{
+      position:relative;
+      z-index:4;
+      max-width:430px;
+      margin:-12px auto 0;
+      min-height:500px;
+      background:rgba(255,255,255,.95);
+      border-radius:30px 30px 0 0;
+      padding:39px 28px 40px;
+      box-shadow:0 -8px 30px rgba(50,70,35,.13);
+    }
+    .card h1{font-family:'Playfair Display',serif;text-align:center;font-size:31px;color:#36622c;margin-bottom:10px}
+    .welcome{text-align:center;color:#777;line-height:1.5;font-size:15px;margin-bottom:30px}
+    .input{height:58px;border:1px solid #dedede;border-radius:12px;display:flex;align-items:center;padding:0 16px;margin-bottom:18px;background:#fff;box-shadow:inset 0 1px 2px rgba(0,0,0,.02)}
+    .input svg{width:22px;height:22px;color:#3e742d;margin-right:13px;flex:none}
+    .input input{border:0;outline:0;width:100%;font-size:15px;color:#333;background:transparent}
+    .input input::placeholder{color:#a4a4a4}
+    .forgot{text-align:right;margin:-5px 2px 28px;font-size:14px;font-weight:600;color:#3d712e;text-decoration:none;display:block}
+    .login-btn{width:100%;height:60px;border:0;border-radius:13px;background:linear-gradient(180deg,#4b822e,#255f17);color:white;font-weight:800;font-size:17px;letter-spacing:.4px;box-shadow:0 9px 16px rgba(42,98,22,.25);display:flex;align-items:center;justify-content:center;gap:14px;cursor:pointer}
+    .login-btn img.lotus-icon{width:30px;height:22px;object-fit:contain;filter:brightness(0) invert(82%) sepia(35%) saturate(540%) hue-rotate(2deg) brightness(95%) contrast(88%);transition:transform .25s ease}
+    .login-btn:hover img.lotus-icon{transform:scale(1.08) rotate(-4deg)}
+    .or{display:flex;align-items:center;gap:14px;color:#8a8a8a;font-size:14px;margin:26px 0 18px}.or:before,.or:after{content:'';flex:1;height:1px;background:#e5e5e5}
+    .social{display:grid;grid-template-columns:1fr 1fr;gap:14px}.social button{height:47px;border:1px solid #ddd;border-radius:10px;background:white;font-weight:600;font-size:15px;color:#333;display:flex;align-items:center;justify-content:center;gap:12px}.g{font-size:22px;color:#4285f4;font-weight:800}.f{width:22px;height:22px;border-radius:50%;background:#1877f2;color:white;display:flex;align-items:center;justify-content:center;font-weight:800;font-family:Arial}
+    .register{text-align:center;margin-top:27px;font-size:15px;color:#666}.register a{color:#367229;font-weight:800;text-decoration:none}
+    .flower-line{position:absolute;bottom:11px;left:-10px;width:102px;height:80px;border:2px solid rgba(54,98,44,.13);border-top:0;border-radius:50%;opacity:.55}.flower-line.r{left:auto;right:-10px}
+    .back-btn{
+      position:absolute;
+      top:18px;left:18px;
+      z-index:5;
+      width:44px;height:44px;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(255,255,255,.78);
+      border:1.5px solid rgba(54,98,44,.25);
+      border-radius:50%;
+      color:#2d5a25;
+      text-decoration:none;
+      box-shadow:0 4px 12px rgba(50,70,35,.12);
+      backdrop-filter:blur(6px);
+      -webkit-backdrop-filter:blur(6px);
+      transition:transform .18s ease,background .18s ease,box-shadow .18s ease;
+    }
+    .back-btn:hover{
+      background:#fff;
+      transform:translateX(-2px);
+      box-shadow:0 6px 16px rgba(50,70,35,.18);
+    }
+    .back-btn:active{transform:translateX(-2px) scale(.95)}
+    .back-btn svg{width:22px;height:22px}
+  </style>
+</head>
+<body>
+  <main class="phone">
+    <section class="bg">
+      <a class="back-btn" href="index.html" aria-label="Quay lại trang chủ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </a>
+    </section>
+    <section class="card">
+      <h1>Đăng nhập</h1>
+      <p class="welcome">Chào mừng bạn trở lại với Sen Đa Lộc</p>
+      <form id="loginForm" novalidate>
+        <label class="input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+          <input id="loginUser" type="text" placeholder="Số điện thoại hoặc email" required />
+        </label>
+        <label class="input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          <input id="loginPass" type="password" placeholder="Mật khẩu" required />
+          <svg style="margin:0 0 0 10px;color:#5d782e" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 2 20 20"/><path d="M6.7 6.7C4.6 8.1 3 10 2 12c2.3 4.6 5.7 7 10 7 1.5 0 2.9-.3 4.1-.9"/><path d="M9.9 4.2c.7-.1 1.4-.2 2.1-.2 4.3 0 7.7 2.4 10 8-.5 1-1.1 1.9-1.8 2.7"/></svg>
+        </label>
+        <a class="forgot" href="#">Quên mật khẩu?</a>
+        <button class="login-btn" type="submit"><img class="lotus-icon" src="images/lotus-icon.png" alt="">Đăng nhập</button>
+      </form>
+      <div class="or">hoặc đăng nhập với</div>
+      <div class="social"><button type="button"><span class="g">G</span>Google</button><button type="button"><span class="f">f</span>Facebook</button></div>
+      <p class="register">Chưa có tài khoản? <a href="#">Đăng ký ngay</a></p>
+      <div class="flower-line"></div><div class="flower-line r"></div>
+    </section>
+  </main>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      var user = document.getElementById('loginUser').value.trim();
+      var pass = document.getElementById('loginPass').value.trim();
+      if(!user || !pass){
+        alert('Vui lòng nhập đầy đủ thông tin đăng nhập');
+        return;
+      }
+      // Lưu trạng thái đăng nhập + cấp voucher chào mừng (chỉ lần đầu)
+      let firstLogin = false;
+      try{
+        localStorage.setItem('sdl_loggedIn', '1');
+        localStorage.setItem('sdl_user', user);
+        if (!localStorage.getItem('sdl_join_date')) {
+          localStorage.setItem('sdl_join_date', new Date().toISOString().slice(0,10));
+        }
+        if (!localStorage.getItem('sdl_welcome_given')) {
+          let list = [];
+          try{ list = JSON.parse(localStorage.getItem('sdl_vouchers')||'[]') || []; }catch(_){}
+          list.push({
+            code: 'WELCOME5',
+            label: 'Quà chào mừng – Giảm 5%',
+            type: 'percent', value: 5, source: 'login',
+            date: new Date().toISOString().slice(0,10)
+          });
+          localStorage.setItem('sdl_vouchers', JSON.stringify(list));
+          localStorage.setItem('sdl_welcome_given', '1');
+          firstLogin = true;
+        }
+      }catch(_){}
+      alert(firstLogin
+        ? 'Đăng nhập thành công! Bạn nhận được mã WELCOME5 – giảm 5% cho đơn hàng.'
+        : 'Đăng nhập thành công!');
+      location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

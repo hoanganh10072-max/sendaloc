@@ -328,7 +328,11 @@
       <div class="emoji" id="resultEmoji">🎉</div>
       <h3>Chúc mừng bạn!</h3>
       <div class="prize" id="resultPrize">GIẢM 50%</div>
-      <p>Mã ưu đãi đã được lưu, vui lòng áp dụng khi đặt hàng trong hôm nay.</p>
+      <div style="background:#f3f8e6;border:1px dashed #9bc065;border-radius:10px;padding:10px;margin:6px 0 14px">
+        <div style="font-size:12px;color:#5a6b4a;letter-spacing:.4px">MÃ ƯU ĐÃI CỦA BẠN</div>
+        <div id="resultCode" style="font-size:20px;font-weight:800;color:#2d6624;letter-spacing:1.2px;margin-top:4px">—</div>
+      </div>
+      <p>Mã đã được lưu vào kho mã giảm giá. Áp dụng tại trang đặt hàng.</p>
       <button id="closeResult">Đóng</button>
     </div>
   </div>
@@ -354,12 +358,32 @@
       'FREE 20K':'🪙',
       'TẶNG 1 CỐC':'🥤'
     };
+    // Map giải thưởng -> voucher
+    const PRIZE_TO_VOUCHER = {
+      'GIẢM 50%':   { prefix:'SALE50',  type:'percent', value:50, label:'Vòng quay: Giảm 50%' },
+      'MIỄN PHÍ':   { prefix:'FREESHIP',type:'freeship',value:0,  label:'Vòng quay: Miễn phí ship' },
+      'FREE 20K':   { prefix:'CASH20K', type:'fixed',   value:20000, label:'Vòng quay: Giảm 20.000đ' },
+      'TẶNG 1 CỐC': { prefix:'FREECUP', type:'fixed',   value:20000, label:'Vòng quay: Tặng 1 cốc (20.000đ)' }
+    };
+    function genCode(prefix){
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let s = '';
+      for(let i=0;i<4;i++) s += chars[Math.floor(Math.random()*chars.length)];
+      return prefix + '-' + s;
+    }
+    function saveVoucher(v){
+      let list = [];
+      try{ list = JSON.parse(localStorage.getItem('sdl_vouchers')||'[]') || []; }catch(_){}
+      list.push(v);
+      try{ localStorage.setItem('sdl_vouchers', JSON.stringify(list)); }catch(_){}
+    }
 
     const rotor = document.getElementById('rotor');
     const spinBtn = document.getElementById('spinBtn');
     const overlay = document.getElementById('resultOverlay');
     const prizeEl = document.getElementById('resultPrize');
     const emojiEl = document.getElementById('resultEmoji');
+    const codeEl  = document.getElementById('resultCode');
 
     let totalRotation = 0;
     let spinning = false;
@@ -383,6 +407,16 @@
         const prize = PRIZES[idx];
         prizeEl.textContent = prize;
         emojiEl.textContent = EMOJI[prize] || '🎉';
+
+        // Phát hành voucher và lưu vào kho
+        const def = PRIZE_TO_VOUCHER[prize];
+        const code = genCode(def.prefix);
+        saveVoucher({
+          code, label: def.label, type: def.type, value: def.value,
+          source: 'wheel', date: new Date().toISOString().slice(0,10)
+        });
+        codeEl.textContent = code;
+
         overlay.classList.add('show');
         spinning = false;
         spinBtn.disabled = false;

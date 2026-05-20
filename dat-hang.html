@@ -61,6 +61,45 @@
     .alert-toast{position:fixed;left:50%;top:30px;transform:translateX(-50%) translateY(-30px);background:#fff;color:#3f512f;border:1px solid #e6b9b9;border-left:5px solid #e23b3b;border-radius:12px;padding:14px 22px;font-size:15px;font-weight:600;box-shadow:0 14px 32px rgba(0,0,0,.18);opacity:0;pointer-events:none;transition:opacity .25s ease, transform .25s ease;z-index:9999;max-width:90%;text-align:center}
     .alert-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
     .input-row{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+    /* ===== Voucher box ===== */
+    .voucher-box{border:1px solid #e4e2de;border-radius:15px;padding:18px 18px 14px;margin-bottom:22px;background:#fbfdf4}
+    .voucher-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+    .voucher-head .vh-ic{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#ffe69a,#f4c641);display:flex;align-items:center;justify-content:center;color:#6b4d10;font-size:18px;font-weight:800;flex-shrink:0;box-shadow:0 4px 10px rgba(228,182,40,.32)}
+    .voucher-head h3{font-size:17px;color:#304018;margin:0;font-weight:700;flex:1}
+    .voucher-head small{display:block;font-size:12px;color:#7a7d73;margin-top:1px;font-weight:400}
+    .voucher-empty{font-size:14px;color:#7a7d73;padding:14px 6px;text-align:center;line-height:1.5}
+    .voucher-empty a{color:#4f781d;font-weight:700;text-decoration:none}
+    .voucher-list{display:flex;flex-direction:column;gap:10px}
+    .voucher-item{display:flex;align-items:center;gap:12px;border:1.5px solid #e0e7d0;background:#fff;border-radius:12px;padding:12px 14px;cursor:pointer;transition:border-color .18s ease, box-shadow .18s ease}
+    .voucher-item:hover{border-color:#9bc065}
+    .voucher-item.selected{border-color:#4f781d;box-shadow:0 4px 12px rgba(79,120,29,.18);background:#f5faea}
+    .voucher-item .v-code{font-family:'Courier New',monospace;font-weight:800;color:#2d6624;font-size:14px;letter-spacing:1px;border:1px dashed #b9cf90;padding:6px 10px;border-radius:7px;background:#fafff0;flex-shrink:0}
+    .voucher-item .v-info{flex:1;min-width:0}
+    .voucher-item .v-info b{display:block;font-size:14px;color:#304018;font-weight:700}
+    .voucher-item .v-info span{display:block;font-size:12px;color:#7a7d73;margin-top:2px}
+    .voucher-item .v-badge{font-size:11px;font-weight:700;color:#fff;background:#4f781d;padding:4px 8px;border-radius:6px;flex-shrink:0;text-transform:uppercase;letter-spacing:.4px}
+    .voucher-item.selected .v-mark{margin-left:6px;color:#4f781d;font-weight:800}
+    .voucher-clear{background:none;border:0;color:#a64545;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;padding:4px 6px;display:block;margin-left:auto}
+
+    /* ===== Login prompt modal ===== */
+    .lp-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:24px}
+    .lp-modal.show{display:flex}
+    .lp-overlay{position:absolute;inset:0;background:rgba(34,50,18,.55);backdrop-filter:blur(4px);animation:lpFade .25s ease}
+    .lp-panel{position:relative;background:#fff;border-radius:24px;padding:32px 26px 24px;width:100%;max-width:360px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.25);animation:lpPop .35s cubic-bezier(.34,1.56,.64,1);font-family:'Be Vietnam Pro',sans-serif}
+    .lp-close{position:absolute;right:14px;top:10px;border:0;background:transparent;font-size:26px;color:#6f7867;width:32px;height:32px;border-radius:50%;cursor:pointer}
+    .lp-close:hover{background:#f4f8eb}
+    .lp-icon{font-size:54px;margin-bottom:8px}
+    .lp-panel h3{font-family:'Playfair Display',serif;font-size:24px;color:#35511f;margin:0 0 10px;font-weight:700}
+    .lp-panel p{color:#5f6b58;font-size:14px;line-height:1.6;margin:0 0 22px}
+    .lp-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .lp-actions button{border:0;border-radius:50px;padding:12px 24px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit}
+    .lp-actions .lp-later{background:#fff;color:#49692b;border:1px solid #dfe8d1}
+    .lp-actions .lp-later:hover{background:#f4f8eb}
+    .lp-actions .lp-agree{background:linear-gradient(to bottom,#5d8d2f,#3f6621);color:#fff;box-shadow:0 8px 18px rgba(73,114,34,.3)}
+    .lp-actions .lp-agree:hover{filter:brightness(1.08)}
+    @keyframes lpFade{from{opacity:0}to{opacity:1}}
+    @keyframes lpPop{0%{opacity:0;transform:translateY(20px) scale(.92)}100%{opacity:1;transform:translateY(0) scale(1)}}
+
     .order{height:65px;border-radius:33px;background:#4f781d;color:#fff;display:flex;align-items:center;justify-content:center;gap:22px;font-size:26px;font-weight:bold;margin-top:6px;cursor:pointer;border:0;width:100%;font-family:inherit;transition:transform .15s ease, box-shadow .15s ease}
     .order:hover{filter:brightness(1.08);box-shadow:0 12px 24px rgba(79,120,29,.35);transform:translateY(-1px)}
     .order:active{transform:translateY(0)}
@@ -156,12 +195,39 @@
         <input class="input" id="noteInput" placeholder="✐  Ghi chú (nếu có)">
       </div>
 
+      <div class="section-title">Mã giảm giá 🍃</div>
+      <div class="voucher-box" id="voucherBox">
+        <div class="voucher-head">
+          <div class="vh-ic">%</div>
+          <div>
+            <h3>Mã giảm giá của bạn</h3>
+            <small>Bao gồm mã vòng quay may mắn và quà chào mừng đăng nhập</small>
+          </div>
+        </div>
+        <div id="voucherList"></div>
+      </div>
+
       <button class="order" id="submitOrder">♧ &nbsp; ĐẶT HÀNG NGAY</button>
       <div class="safe">♢ &nbsp; Thông tin của bạn được bảo mật tuyệt đối</div>
     </section>
   </div>
 
   <div class="alert-toast" id="alertToast" role="alert"></div>
+
+  <!-- Modal mời đăng nhập (chỉ hiện khi chưa đăng nhập) -->
+  <div class="lp-modal" id="loginPromptModal" aria-hidden="true">
+    <div class="lp-overlay" data-lp-close></div>
+    <div class="lp-panel" role="dialog" aria-modal="true">
+      <button class="lp-close" data-lp-close aria-label="Đóng">×</button>
+      <div class="lp-icon">🌸</div>
+      <h3>Đồng hành cùng Sen Đa Lộc</h3>
+      <p>Sen Đa Lộc mong bạn đồng hành cùng chúng mình nên hãy đăng nhập để lưu thông tin nhau nha 🌿</p>
+      <div class="lp-actions">
+        <button class="lp-later" type="button" data-lp-close>Để sau</button>
+        <button class="lp-agree" type="button" id="lpAgree">Đồng ý</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     const UNIT = 20000;
@@ -214,7 +280,79 @@
       el.addEventListener('input', () => el.classList.remove('invalid'), { once: true });
     };
 
+    // ===== Voucher list =====
+    function loadVouchers(){
+      try{ return JSON.parse(localStorage.getItem('sdl_vouchers')||'[]') || []; }catch(_){return [];}
+    }
+    function describeValue(v){
+      if (v.type === 'percent')  return 'Giảm ' + v.value + '% trên tổng đơn';
+      if (v.type === 'fixed')    return 'Giảm ' + v.value.toLocaleString('vi-VN') + 'đ';
+      if (v.type === 'freeship') return 'Miễn phí vận chuyển';
+      return '';
+    }
+    function badge(v){
+      if (v.type === 'percent')  return '-' + v.value + '%';
+      if (v.type === 'fixed')    return '-' + (v.value/1000) + 'K';
+      if (v.type === 'freeship') return 'FREESHIP';
+      return 'ƯU ĐÃI';
+    }
+    let selectedVoucher = null;
+    function renderVouchers(){
+      const list = loadVouchers();
+      const wrap = document.getElementById('voucherList');
+      if (!list.length) {
+        wrap.innerHTML = '<div class="voucher-empty">Bạn chưa có mã nào.<br>Hãy <a href="mini-game.html">chơi vòng quay may mắn</a> hoặc <a href="dang-nhap.html">đăng nhập</a> để nhận mã!</div>';
+        return;
+      }
+      wrap.innerHTML =
+        '<div class="voucher-list">' +
+        list.map((v,i) => (
+          '<div class="voucher-item" data-idx="'+i+'">' +
+            '<span class="v-code">'+v.code+'</span>' +
+            '<div class="v-info"><b>'+(v.label||v.code)+'</b><span>'+describeValue(v)+(v.date?' · '+v.date:'')+'</span></div>' +
+            '<span class="v-badge">'+badge(v)+'</span>' +
+          '</div>'
+        )).join('') +
+        '</div>' +
+        '<button class="voucher-clear" id="voucherClear" type="button">Bỏ chọn mã</button>';
+
+      wrap.querySelectorAll('.voucher-item').forEach(el => {
+        el.addEventListener('click', () => {
+          const idx = parseInt(el.dataset.idx, 10);
+          const v = list[idx];
+          if (selectedVoucher && selectedVoucher.code === v.code) {
+            selectedVoucher = null;
+          } else {
+            selectedVoucher = v;
+          }
+          wrap.querySelectorAll('.voucher-item').forEach(x => x.classList.remove('selected'));
+          if (selectedVoucher) el.classList.add('selected');
+        });
+      });
+      document.getElementById('voucherClear').addEventListener('click', () => {
+        selectedVoucher = null;
+        wrap.querySelectorAll('.voucher-item').forEach(x => x.classList.remove('selected'));
+      });
+    }
+    renderVouchers();
+
+    // Modal mời đăng nhập
+    const lpModal = document.getElementById('loginPromptModal');
+    lpModal.querySelectorAll('[data-lp-close]').forEach(el =>
+      el.addEventListener('click', () => lpModal.classList.remove('show'))
+    );
+    document.getElementById('lpAgree').addEventListener('click', () => {
+      location.href = 'dang-nhap.html';
+    });
+    function isLoggedIn(){
+      try{ return localStorage.getItem('sdl_loggedIn') === '1'; }catch(_){ return false; }
+    }
+
     document.getElementById('submitOrder').addEventListener('click', () => {
+      if (!isLoggedIn()) {
+        lpModal.classList.add('show');
+        return;
+      }
       const addr = addressInput.value.trim();
       const phone = phoneInput.value.trim();
       if (!addr || !phone) {
@@ -229,7 +367,16 @@
       const shipEl = document.querySelector('.ship .card.active b');
       const option = optionEl ? optionEl.textContent.trim() : 'Nguyên bản';
       const ship = shipEl ? shipEl.textContent.trim() : 'Ship ngoại thành';
-      const params = new URLSearchParams({ qty, option, ship });
+      const payload = { qty, option, ship };
+      if (selectedVoucher) payload.voucher = selectedVoucher.code;
+      // Tăng số lần mua (chỉ tính nếu đã đăng nhập)
+      try{
+        if (localStorage.getItem('sdl_loggedIn') === '1') {
+          const c = parseInt(localStorage.getItem('sdl_purchase_count')||'0', 10) || 0;
+          localStorage.setItem('sdl_purchase_count', String(c + 1));
+        }
+      }catch(_){}
+      const params = new URLSearchParams(payload);
       location.href = 'thanh-toan.html?' + params.toString();
     });
   </script>

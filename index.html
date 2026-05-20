@@ -12,6 +12,28 @@
 </head>
 <body>
 
+  <a class="cart-fab" id="cartFab" href="#" aria-label="Tài khoản của tôi">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="8" r="4"/>
+      <path d="M4 21a8 8 0 0 1 16 0"/>
+    </svg>
+  </a>
+  <div class="cart-menu" id="cartMenu">
+    <div class="user">Xin chào,<b id="cartUser">Khách</b></div>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num" id="statOrders">0</div>
+        <div class="stat-lbl">Lần mua</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="statDays">0</div>
+        <div class="stat-lbl">Ngày đồng hành</div>
+      </div>
+    </div>
+    <div class="sep"></div>
+    <button type="button" id="logoutBtn">↩ Đăng xuất</button>
+  </div>
+
   <main class="page">
 
     <!-- ===== HERO ===== -->
@@ -34,7 +56,7 @@
 
       <div class="buttons">
         <a class="btn btn-primary" href="dat-hang.html">ĐẶT HÀNG</a>
-        <button class="btn btn-secondary" data-scroll="about">TÌM HIỂU</button>
+        <a class="btn btn-secondary" href="dang-nhap.html">ĐĂNG NHẬP</a>
         <button class="btn btn-game" id="minigameBtn">MINIGAME</button>
       </div>
 
@@ -174,9 +196,100 @@
     </div>
   </div>
 
+  <!-- ===== LOGIN PROMPT MODAL ===== -->
+  <div class="modal" id="loginPromptModal" aria-hidden="true">
+    <div class="modal-overlay" data-lp-close></div>
+    <div class="modal-panel" role="dialog" aria-modal="true">
+      <button class="modal-close" data-lp-close aria-label="Đóng">×</button>
+      <div class="modal-icon">🌸</div>
+      <h3>Đồng hành cùng Sen Đa Lộc</h3>
+      <p>Sen Đa Lộc mong bạn đồng hành cùng chúng mình nên hãy đăng nhập để lưu thông tin nhau nha 🌿</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-secondary" type="button" data-lp-close>Để sau</button>
+        <button class="btn btn-primary" type="button" id="lpAgree">Đồng ý</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== TOAST ===== -->
   <div class="toast" id="toast"></div>
 
   <script src="script.js"></script>
+  <script>
+    // ===== Trạng thái đăng nhập: ẩn nút ĐĂNG NHẬP, hiện giỏ hàng =====
+    (function(){
+      const isLogged = (function(){ try{ return localStorage.getItem('sdl_loggedIn') === '1'; }catch(_){return false;} })();
+      const loginBtn = document.querySelector('a.btn.btn-secondary[href="dang-nhap.html"]');
+      const fab = document.getElementById('cartFab');
+      const menu = document.getElementById('cartMenu');
+
+      if (!isLogged) return;
+
+      // Ẩn nút đăng nhập
+      if (loginBtn) loginBtn.style.display = 'none';
+
+      const user = (localStorage.getItem('sdl_user')||'').trim();
+      if (user) document.getElementById('cartUser').textContent = user;
+
+      // Số lần mua
+      const purchases = parseInt(localStorage.getItem('sdl_purchase_count')||'0', 10) || 0;
+      document.getElementById('statOrders').textContent = purchases;
+
+      // Số ngày đồng hành (tính từ ngày đăng nhập đầu tiên)
+      let joinStr = localStorage.getItem('sdl_join_date');
+      if (!joinStr) {
+        joinStr = new Date().toISOString().slice(0,10);
+        try{ localStorage.setItem('sdl_join_date', joinStr); }catch(_){}
+      }
+      const joinDate = new Date(joinStr + 'T00:00:00');
+      const today = new Date(); today.setHours(0,0,0,0);
+      const days = Math.max(0, Math.floor((today - joinDate) / 86400000)) + 1;
+      document.getElementById('statDays').textContent = days;
+
+      fab.classList.add('show');
+
+      // Click vào cart → mở/đóng menu (không follow link ngay)
+      fab.addEventListener('click', (e) => {
+        e.preventDefault();
+        menu.classList.toggle('show');
+      });
+      // Click ngoài menu thì đóng
+      document.addEventListener('click', (e) => {
+        if (!menu.contains(e.target) && !fab.contains(e.target)) {
+          menu.classList.remove('show');
+        }
+      });
+      // Đăng xuất
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        try{
+          localStorage.removeItem('sdl_loggedIn');
+          localStorage.removeItem('sdl_user');
+        }catch(_){}
+        location.reload();
+      });
+    })();
+
+    // ===== Modal "đăng nhập trước khi đặt hàng" (chỉ khi chưa đăng nhập) =====
+    (function(){
+      const isLogged = (function(){ try{ return localStorage.getItem('sdl_loggedIn') === '1'; }catch(_){return false;} })();
+      if (isLogged) return;
+
+      const modal = document.getElementById('loginPromptModal');
+      const orderBtn = document.querySelector('a.btn.btn-primary[href="dat-hang.html"]');
+
+      function openLP(){ modal.classList.add('show'); }
+      function closeLP(){ modal.classList.remove('show'); }
+
+      modal.querySelectorAll('[data-lp-close]').forEach(el => el.addEventListener('click', closeLP));
+      document.getElementById('lpAgree').addEventListener('click', () => { location.href = 'dang-nhap.html'; });
+
+      if (orderBtn) {
+        orderBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          openLP();
+        });
+      }
+    })();
+  </script>
 </body>
 </html>

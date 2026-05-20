@@ -121,22 +121,119 @@ button { font-family: inherit; cursor: pointer; }
 
 .buttons {
   display: flex;
-  gap: 12px;
+  flex-wrap: nowrap;
+  gap: 10px;
   margin-top: 26px;
   position: relative;
   z-index: 3;
 }
 
+/* ===== Cart icon (hiện khi đã đăng nhập) ===== */
+.cart-fab {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 999;
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #5d8d2f, #3f6621);
+  color: #fff;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 22px rgba(63, 102, 33, 0.35);
+  text-decoration: none;
+  transition: transform .18s ease, box-shadow .18s ease;
+  cursor: pointer;
+  border: 2px solid #fff;
+}
+.cart-fab.show { display: flex; }
+.cart-fab:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(63, 102, 33, 0.45); }
+.cart-fab:active { transform: translateY(0) scale(0.96); }
+.cart-fab svg { width: 24px; height: 24px; display: block; }
+.cart-fab .cart-badge {
+  position: absolute;
+  top: -4px; right: -4px;
+  min-width: 20px; height: 20px;
+  padding: 0 5px;
+  border-radius: 10px;
+  background: #e84984;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  line-height: 1;
+}
+.cart-fab .cart-badge:empty,
+.cart-fab .cart-badge[data-count="0"] { display: none; }
+
+/* Menu xổ khi click vào cart-fab */
+.cart-menu {
+  position: fixed;
+  top: 76px; right: 18px;
+  z-index: 999;
+  width: 220px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, .18);
+  border: 1px solid #ecefdf;
+  padding: 8px;
+  display: none;
+  font-family: 'Be Vietnam Pro', sans-serif;
+}
+.cart-menu.show { display: block; }
+.cart-menu a, .cart-menu button {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 10px 12px;
+  font-size: 14px; color: #2e351d;
+  border: 0; background: none; cursor: pointer;
+  text-decoration: none; border-radius: 8px;
+  font-family: inherit; text-align: left;
+  font-weight: 500;
+}
+.cart-menu a:hover, .cart-menu button:hover { background: #f5faea; color: #4f781d; }
+.cart-menu .sep { height: 1px; background: #eef0e6; margin: 4px 6px; }
+.cart-menu .user {
+  padding: 12px 12px 10px; font-size: 13px; color: #7a7d73;
+}
+.cart-menu .user b { display: block; color: #2e6428; font-size: 14px; margin-top: 2px; word-break: break-all; }
+.cart-menu .stats {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  padding: 6px 6px 10px;
+}
+.cart-menu .stat {
+  background: linear-gradient(135deg, #f5faea, #eaf3d5);
+  border: 1px solid #d8e6b8;
+  border-radius: 10px;
+  padding: 12px 8px;
+  text-align: center;
+}
+.cart-menu .stat-num {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 26px; font-weight: 700; color: #3f6621;
+  line-height: 1;
+}
+.cart-menu .stat-lbl {
+  font-size: 11px; color: #6b7a55; margin-top: 6px; font-weight: 600;
+  letter-spacing: .3px;
+}
+
 .btn {
   border: none;
-  padding: 15px 22px;
+  padding: 14px 20px;
   border-radius: 50px;
   font-weight: 700;
   font-size: 12.5px;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
   font-family: inherit;
+  white-space: nowrap;
+  text-align: center;
+  line-height: 1;
 }
 .btn:active { transform: translateY(1px); }
 

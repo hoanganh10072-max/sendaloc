@@ -71,6 +71,52 @@
   .total{font-weight:700; color:var(--green); font-size:17px}
   .total span:last-child{font-size:22px; color:var(--green)}
 
+  /* voucher */
+  .voucher{padding:18px 20px;}
+  .voucher-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .voucher-head .v-icon{
+    width:34px;height:34px;border-radius:9px;
+    background:linear-gradient(135deg,#ffe69a,#f4c641);
+    display:flex;align-items:center;justify-content:center;
+    color:#6b4d10;font-size:18px;font-weight:800;flex-shrink:0;
+    box-shadow:0 4px 10px rgba(228,182,40,.32);
+  }
+  .voucher-head .v-title{font-weight:700;color:#304018;font-size:16px;flex:1}
+  .voucher-head .v-sub{font-size:12px;color:#7a7d73;display:block;margin-top:1px;font-weight:400}
+  .voucher-input{
+    display:flex;gap:10px;align-items:stretch;
+    border:1.5px dashed #c9d4ad;border-radius:11px;padding:6px 6px 6px 14px;
+    background:#fbfdf3;
+  }
+  .voucher-input input{
+    border:0;outline:0;background:transparent;flex:1;
+    font-family:inherit;font-size:14px;color:#2e351d;
+    letter-spacing:.6px;text-transform:uppercase;
+  }
+  .voucher-input input::placeholder{color:#9aa28a;text-transform:none;letter-spacing:0}
+  .v-apply{
+    border:0;border-radius:8px;background:var(--green);color:#fff;
+    font-family:inherit;font-weight:700;font-size:13px;padding:0 16px;
+    cursor:pointer;letter-spacing:.3px;transition:background .18s ease;
+  }
+  .v-apply:hover{background:var(--green-dark)}
+  .v-applied{
+    margin-top:12px;display:none;align-items:center;gap:10px;
+    background:linear-gradient(90deg,#e8f3d1,#f4f8e2);
+    border:1px solid #c4d99a;border-radius:11px;padding:10px 14px;
+  }
+  .v-applied.show{display:flex}
+  .v-applied .tick{
+    width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;
+  }
+  .v-applied .info{flex:1;font-size:13px;color:#2e351d}
+  .v-applied .info b{color:var(--green);letter-spacing:.5px}
+  .v-applied .remove{
+    background:none;border:0;color:#a64545;font-size:12px;font-weight:600;cursor:pointer;
+  }
+  .row.discount span:last-child{color:#c33;font-weight:700}
+
   /* timer */
   .timer{
     height:78px; border-radius:14px; background:linear-gradient(135deg,#f7f9f2,#eef3df);
@@ -223,8 +269,28 @@
         <div class="row"><span>Tùy chọn</span><span id="sumOption">Nguyên bản</span></div>
         <div class="row"><span>Tạm tính</span><span id="sumSubtotal">20.000đ</span></div>
         <div class="row"><span>Phí vận chuyển</span><span id="sumShip">15.000đ</span></div>
+        <div class="row discount" id="rowDiscount" style="display:none"><span id="discountLabel">Giảm giá voucher</span><span id="sumDiscount">-0đ</span></div>
         <div class="line"></div>
         <div class="row total"><span>Tổng thanh toán</span><span id="sumTotal">35.000đ</span></div>
+      </div>
+    </section>
+
+    <!-- voucher -->
+    <section class="card voucher">
+      <div class="voucher-head">
+        <div class="v-icon">%</div>
+        <div class="v-title">Voucher giảm giá
+          <small class="v-sub">Nhập mã hoặc đăng nhập để nhận ưu đãi thành viên 5%</small>
+        </div>
+      </div>
+      <div class="voucher-input">
+        <input id="voucherInput" type="text" placeholder="Nhập mã voucher (VD: MEMBER5)" autocomplete="off">
+        <button class="v-apply" id="voucherApply" type="button">Áp dụng</button>
+      </div>
+      <div class="v-applied" id="voucherApplied">
+        <div class="tick">✓</div>
+        <div class="info">Đã áp dụng <b id="vCode">MEMBER5</b> – giảm <b id="vPercent">5%</b> trên tổng đơn</div>
+        <button class="remove" id="voucherRemove" type="button">Bỏ mã</button>
       </div>
     </section>
 
@@ -335,15 +401,109 @@
     const UNIT = 20000;
     const SHIP_FEE = 15000;
     const subtotal = UNIT * qty;
-    const total = subtotal + SHIP_FEE;
     const fmt = n => n.toLocaleString('vi-VN') + 'đ';
 
     document.getElementById('sumQty').textContent = 'x' + qty;
     document.getElementById('sumOption').textContent = option;
     document.getElementById('sumSubtotal').textContent = fmt(subtotal);
     document.getElementById('sumShip').textContent = fmt(SHIP_FEE);
-    document.getElementById('sumTotal').textContent = fmt(total);
-    document.getElementById('qrAmount').textContent = fmt(total);
+
+    // ===== Voucher / Discount =====
+    // Voucher dạng object: { code, label, type:'percent|fixed|freeship', value }
+    const STATIC_VOUCHERS = {
+      'WELCOME5': { code:'WELCOME5', label:'Quà chào mừng – Giảm 5%', type:'percent', value:5 },
+      'SEN10':    { code:'SEN10',    label:'Voucher SEN10 – Giảm 10%', type:'percent', value:10 }
+    };
+    function loadStoredVouchers(){
+      try{ return JSON.parse(localStorage.getItem('sdl_vouchers')||'[]') || []; }catch(_){return [];}
+    }
+    function findVoucher(code){
+      if (!code) return null;
+      const c = code.trim().toUpperCase();
+      if (STATIC_VOUCHERS[c]) return STATIC_VOUCHERS[c];
+      const list = loadStoredVouchers();
+      return list.find(v => (v.code||'').toUpperCase() === c) || null;
+    }
+
+    let activeVoucher = null; // object hoặc null
+
+    const elDiscountRow = document.getElementById('rowDiscount');
+    const elDiscount    = document.getElementById('sumDiscount');
+    const elDiscountLbl = document.getElementById('discountLabel');
+    const elTotal       = document.getElementById('sumTotal');
+    const elQrAmount    = document.getElementById('qrAmount');
+    const elApplied     = document.getElementById('voucherApplied');
+    const elVCode       = document.getElementById('vCode');
+    const elVPercent    = document.getElementById('vPercent');
+    const elVoucherIn   = document.getElementById('voucherInput');
+
+    function discountOf(v){
+      if (!v) return 0;
+      if (v.type === 'percent')  return Math.round(subtotal * v.value / 100);
+      if (v.type === 'fixed')    return Math.min(v.value, subtotal + SHIP_FEE);
+      if (v.type === 'freeship') return SHIP_FEE;
+      return 0;
+    }
+    function shortDesc(v){
+      if (v.type === 'percent')  return v.value + '%';
+      if (v.type === 'fixed')    return (v.value/1000) + 'K';
+      if (v.type === 'freeship') return 'Free ship';
+      return '';
+    }
+
+    function recalc(){
+      const discount = discountOf(activeVoucher);
+      if (activeVoucher) {
+        elDiscountRow.style.display = 'flex';
+        elDiscount.textContent = '-' + fmt(discount);
+        elDiscountLbl.textContent = activeVoucher.label || ('Giảm giá ' + activeVoucher.code);
+        elApplied.classList.add('show');
+        elVCode.textContent = activeVoucher.code;
+        elVPercent.textContent = shortDesc(activeVoucher);
+      } else {
+        elDiscountRow.style.display = 'none';
+        elApplied.classList.remove('show');
+      }
+      const total = Math.max(0, subtotal + SHIP_FEE - discount);
+      elTotal.textContent = fmt(total);
+      elQrAmount.textContent = fmt(total);
+    }
+
+    function applyVoucher(code){
+      const c = (code||'').trim().toUpperCase();
+      if (!c) { showToast('Vui lòng nhập mã voucher'); return; }
+      const v = findVoucher(c);
+      if (!v) { showToast('Mã voucher không hợp lệ'); return; }
+      activeVoucher = v;
+      elVoucherIn.value = v.code;
+      recalc();
+      showToast('Đã áp dụng mã ' + v.code);
+    }
+
+    document.getElementById('voucherApply').addEventListener('click', () => applyVoucher(elVoucherIn.value));
+    elVoucherIn.addEventListener('keydown', e => { if(e.key==='Enter'){ e.preventDefault(); applyVoucher(elVoucherIn.value);} });
+    document.getElementById('voucherRemove').addEventListener('click', () => {
+      activeVoucher = null;
+      elVoucherIn.value = '';
+      recalc();
+      showToast('Đã bỏ mã voucher');
+    });
+
+    // 1) Ưu tiên voucher chọn từ trang đặt hàng (URL param)
+    // 2) Nếu không có, tự áp WELCOME5 khi đã đăng nhập (nếu còn trong kho)
+    const urlVoucher = params.get('voucher');
+    if (urlVoucher) {
+      const v = findVoucher(urlVoucher);
+      if (v) { activeVoucher = v; elVoucherIn.value = v.code; }
+    } else {
+      try{
+        if (localStorage.getItem('sdl_loggedIn') === '1') {
+          const welcome = findVoucher('WELCOME5');
+          if (welcome) { activeVoucher = welcome; elVoucherIn.value = welcome.code; }
+        }
+      }catch(_){}
+    }
+    recalc();
 
     // generate order code
     const now = new Date();
