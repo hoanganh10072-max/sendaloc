@@ -12,6 +12,14 @@
 </head>
 <body>
 
+  <a class="login-fab" id="loginFab" href="dang-nhap.html" aria-label="Đăng nhập">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+      <polyline points="10 17 15 12 10 7"/>
+      <line x1="15" y1="12" x2="3" y2="12"/>
+    </svg>
+    <span>ĐĂNG NHẬP</span>
+  </a>
   <a class="cart-fab" id="cartFab" href="#" aria-label="Tài khoản của tôi">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="8" r="4"/>
@@ -38,8 +46,6 @@
 
     <!-- ===== HERO ===== -->
     <section class="hero">
-      <div class="logo">SEN ĐA LỘC</div>
-
       <div class="title-small">Trà</div>
       <h1 class="title">SEN ĐA LỘC</h1>
 
@@ -55,9 +61,8 @@
       </div>
 
       <div class="buttons">
-        <a class="btn btn-primary" href="dat-hang.html">ĐẶT HÀNG</a>
-        <a class="btn btn-secondary" href="dang-nhap.html">ĐĂNG NHẬP</a>
-        <button class="btn btn-game" id="minigameBtn">MINIGAME</button>
+        <a class="btn btn-primary btn-big" href="dat-hang.html">🛒 &nbsp;ĐẶT HÀNG NGAY</a>
+        <button class="btn btn-game" id="minigameBtn" style="display:none">MINIGAME</button>
       </div>
 
     </section>
@@ -219,14 +224,19 @@
     // ===== Trạng thái đăng nhập: ẩn nút ĐĂNG NHẬP, hiện giỏ hàng =====
     (function(){
       const isLogged = (function(){ try{ return localStorage.getItem('sdl_loggedIn') === '1'; }catch(_){return false;} })();
-      const loginBtn = document.querySelector('a.btn.btn-secondary[href="dang-nhap.html"]');
+      const loginFab = document.getElementById('loginFab');
       const fab = document.getElementById('cartFab');
       const menu = document.getElementById('cartMenu');
 
-      if (!isLogged) return;
+      if (!isLogged) {
+        // Chưa đăng nhập → hiện nút ĐĂNG NHẬP nổi góc trên-phải
+        loginFab.classList.add('show');
+        return;
+      }
 
-      // Ẩn nút đăng nhập
-      if (loginBtn) loginBtn.style.display = 'none';
+      // Đã đăng nhập → hiện MINIGAME trong cụm nút hero
+      const miniBtn = document.getElementById('minigameBtn');
+      if (miniBtn) miniBtn.style.display = '';
 
       const user = (localStorage.getItem('sdl_user')||'').trim();
       if (user) document.getElementById('cartUser').textContent = user;

@@ -128,6 +128,62 @@ button { font-family: inherit; cursor: pointer; }
   z-index: 3;
 }
 
+/* ===== Nút ĐĂNG NHẬP góc trên-phải (hiện khi CHƯA đăng nhập) ===== */
+.login-fab {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 999;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px 0 14px;
+  border-radius: 50px;
+  background: linear-gradient(180deg, #5d8d2f, #3f6621);
+  color: #fff;
+  font-family: 'Be Vietnam Pro', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  box-shadow: 0 8px 22px rgba(63, 102, 33, 0.35);
+  border: 2px solid #fff;
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.login-fab.show { display: inline-flex; }
+.login-fab:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(63, 102, 33, 0.45); filter: brightness(1.05); }
+.login-fab:active { transform: translateY(0) scale(0.97); }
+.login-fab svg { width: 18px; height: 18px; display: block; }
+
+/* ===== Nút ĐẶT HÀNG to – nổi bật ===== */
+.btn-big {
+  flex: 1 1 auto;
+  font-size: 17px !important;
+  letter-spacing: 1px !important;
+  padding: 18px 28px !important;
+  border-radius: 60px !important;
+  box-shadow: 0 14px 32px rgba(73, 114, 34, 0.42) !important;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+.btn-big:hover { transform: translateY(-2px); }
+.btn-big:before {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.32), transparent);
+  transform: skewX(-20deg);
+  animation: btnShine 3s ease-in-out infinite;
+}
+@keyframes btnShine {
+  0%   { left: -100%; }
+  60%  { left: 140%; }
+  100% { left: 140%; }
+}
+
 /* ===== Cart icon (hiện khi đã đăng nhập) ===== */
 .cart-fab {
   position: fixed;
